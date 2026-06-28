@@ -1,29 +1,17 @@
 package com.atm.entity;
 
-/**
- * Lớp Account (Tính chất: Kế thừa - Inheritance)
- *
- * Account kế thừa từ lớp cha User, đại diện cho một tài khoản ngân hàng của người dùng.
- * - Mở rộng các thuộc tính riêng: accountNumber, balance, pinCode, isLocked.
- * - Constructor gọi lại constructor của lớp cha thông qua 'super(...)'.
- * - Đảm bảo tính đóng gói với các thuộc tính private và Getter/Setter tương ứng.
- *
- * @author Advanced ATM Simulator (CodeGym)
- */
-public class Account extends User {
 
-    // ===== Thuộc tính riêng (Encapsulation) =====
+public class Account extends User {
+   
     private String accountNumber;
     private double balance;
     private String pinCode;
     private boolean isLocked;
 
-    // ===== Constructor không tham số =====
     public Account() {
         super();
     }
 
-    // ===== Constructor đầy đủ tham số (kế thừa từ User) =====
     public Account(int id, String username, String password, String role,
                    String accountNumber, double balance, String pinCode, boolean isLocked) {
         super(id, username, password, role);
@@ -33,7 +21,6 @@ public class Account extends User {
         this.isLocked = isLocked;
     }
 
-    // ===== Getter / Setter =====
     public String getAccountNumber() {
         return accountNumber;
     }
