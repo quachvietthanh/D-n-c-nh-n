@@ -12,7 +12,7 @@ Dự án mô phỏng hệ thống quản lý tài khoản và giao dịch tại 
 
 ## 📅 Tiến độ dự án (Personal Backlog)
 - [x] Tuần 1: Khởi tạo kiến trúc và Entities (Factory Pattern)
-- [ ] Tuần 2: Cài đặt bộ kiểm thử (TDD) & Custom Exception
+- [x] Tuần 2: Cài đặt bộ kiểm thử (TDD) & Custom Exception
 - [ ] Tuần 3: Tầng dữ liệu (Generic Repository & File IO)
 - [ ] Tuần 4: Logic nghiệp vụ (Service) & Đa luồng (Threading)
 - [ ] Tuần 5: Điều khiển Menu (Controller) & Nghiệm thu
