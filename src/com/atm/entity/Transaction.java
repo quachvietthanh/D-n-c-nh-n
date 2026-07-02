@@ -1,8 +1,9 @@
 package com.atm.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Transaction {
+public class Transaction implements Serializable {
 
     private String transactionId;
     private String accountNumber;
