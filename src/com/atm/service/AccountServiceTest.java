@@ -21,7 +21,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testWithdraw_Success() throws InsufficientBalanceException {
+    public void testWithdraw_Success() throws Exception {
         double withdrawAmount = 200_000;
         double expectedBalance = 300_000;
 
@@ -31,7 +31,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testWithdraw_InsufficientBalance_ShouldThrowException() {
+    public void testWithdraw_InsufficientBalance_ShouldThrowException() throws Exception {
         double withdrawAmount = 600_000;
 
         assertThrows(InsufficientBalanceException.class, () -> {

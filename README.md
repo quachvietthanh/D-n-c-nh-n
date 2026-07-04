@@ -14,5 +14,5 @@ Dự án mô phỏng hệ thống quản lý tài khoản và giao dịch tại 
 - [x] Tuần 1: Khởi tạo kiến trúc và Entities (Factory Pattern)
 - [x] Tuần 2: Cài đặt bộ kiểm thử (TDD) & Custom Exception
 - [x] Tuần 3: Tầng dữ liệu (Generic Repository & File IO)
-- [ ] Tuần 4: Logic nghiệp vụ (Service) & Đa luồng (Threading)
+- [x] Tuần 4: Logic nghiệp vụ (Service) & Đa luồng (Threading)
 - [ ] Tuần 5: Điều khiển Menu (Controller) & Nghiệm thu
