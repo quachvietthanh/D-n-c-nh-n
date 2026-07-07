@@ -170,15 +170,6 @@ javac -d bin -cp lib/junit-platform-console-standalone.jar src/com/atm/**/*.java
 java -cp bin com.atm.Main
 ```
 
-> **Yêu cầu:** Java 8+ và thư viện `junit-platform-console-standalone.jar` trong thư mục `lib/`.
-
 ---
 
-## 👤 Tác giả
 
-**Dự án cá nhân — CodeGym**  
-Mô phỏng máy ATM bằng Java Core thuần — Kiến trúc 3-Tier — Thread Safety — TDD
-
----
-
-<p align="center"><i>⭐ Nếu bạn thấy dự án hữu ích, hãy để lại một ngôi sao nhé!</i></p>
