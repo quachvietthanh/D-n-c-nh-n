@@ -7,15 +7,16 @@ import com.atm.exception.InvalidPinException;
 import com.atm.repository.AccountRepository;
 import java.util.List;
 
-public class AccountService {
+public class AccountServiceImpl implements AccountServiceInterface {
 
     private final AccountRepository accountRepository;
 
-    public AccountService() {
+    public AccountServiceImpl() {
         this.accountRepository = new AccountRepository();
     }
 
-    public void withdraw(Account account, double amount)
+    @Override
+    public synchronized void withdraw(Account account, double amount)
             throws AccountLockedException, InsufficientBalanceException {
         if (account.isLocked()) {
             throw new AccountLockedException("Tai khoan da bi khoa");
@@ -27,12 +28,17 @@ public class AccountService {
         updateAccountInFile(account);
     }
 
-    public void deposit(Account account, double amount) {
+    @Override
+    public synchronized void deposit(Account account, double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("So tien nap phai lon hon 0");
+        }
         account.setBalance(account.getBalance() + amount);
         updateAccountInFile(account);
     }
 
-    public void transfer(Account sourceAccount, String targetAccountNumber, double amount)
+    @Override
+    public synchronized void transfer(Account sourceAccount, String targetAccountNumber, double amount)
             throws AccountLockedException, InsufficientBalanceException {
         if (sourceAccount.isLocked()) {
             throw new AccountLockedException("Tai khoan nguon da bi khoa");
@@ -51,6 +57,9 @@ public class AccountService {
         if (targetAccount == null) {
             throw new IllegalArgumentException("Khong tim thay tai khoan dich");
         }
+        if (targetAccount.isLocked()) {
+            throw new AccountLockedException("Tai khoan dich da bi khoa");
+        }
         sourceAccount.setBalance(sourceAccount.getBalance() - amount);
         targetAccount.setBalance(targetAccount.getBalance() + amount);
         for (int i = 0; i < accounts.size(); i++) {
@@ -63,10 +72,14 @@ public class AccountService {
         accountRepository.saveAll(accounts);
     }
 
-    public void changePin(Account account, String oldPin, String newPin)
+    @Override
+    public synchronized void changePin(Account account, String oldPin, String newPin)
             throws InvalidPinException {
         if (!account.getPinCode().equals(oldPin)) {
             throw new InvalidPinException("Ma PIN cu khong dung");
+        }
+        if (newPin == null || !newPin.matches("\\d{6}")) {
+            throw new InvalidPinException("Ma PIN moi phai gom 6 chu so");
         }
         account.setPinCode(newPin);
         updateAccountInFile(account);

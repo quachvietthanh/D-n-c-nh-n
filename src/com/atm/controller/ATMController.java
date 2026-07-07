@@ -5,15 +5,15 @@ import com.atm.exception.AccountLockedException;
 import com.atm.exception.InsufficientBalanceException;
 import com.atm.exception.InvalidPinException;
 import com.atm.repository.AccountRepository;
-import com.atm.service.AccountService;
+import com.atm.service.AccountServiceInterface;
 import java.util.List;
 
 public class ATMController {
 
-    private final AccountService accountService;
+    private final AccountServiceInterface accountService;
 
-    public ATMController() {
-        this.accountService = new AccountService();
+    public ATMController(AccountServiceInterface accountService) {
+        this.accountService = accountService;
     }
 
     public boolean login(String accountNumber, String pin) {

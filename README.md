@@ -6,7 +6,7 @@
 
 ## 📋 Giới thiệu
 
-Dự án **Advanced ATM Simulator** là ứng dụng Java Core thuần chạy trên môi trường Console, mô phỏng các chức năng của một máy ATM thực tế. Được xây dựng theo kiến trúc **phân tầng (3-Tier Architecture)** với các nguyên lý **OOP**, **SOLID** và **Design Pattern**.
+Dự án **Advanced ATM Simulator** là ứng dụng Java Core thuần chạy trên môi trường Console, mô phỏng các chức năng của một máy ATM thực tế. Được xây dựng theo kiến trúc **phân tầng (3-Tier Architecture)** với các nguyên lý **OOP**, **SOLID**, **Design Pattern** và **Thread Safety**.
 
 ---
 
@@ -20,8 +20,10 @@ Dự án **Advanced ATM Simulator** là ứng dụng Java Core thuần chạy tr
 | ❗ **Custom Exception** | `InsufficientBalanceException`, `AccountLockedException`, `InvalidPinException` |
 | 🏭 **Factory Pattern** | `UserFactory` — khởi tạo đối tượng User theo role |
 | 💾 **File IO (Serialization)** | Lưu trữ dữ liệu nhị phân bằng `ObjectInputStream` / `ObjectOutputStream` |
-| 🧪 **JUnit 5 (TDD)** | Viết test trước — code xử lý sau |
-| 🔒 **Encapsulation** | Thuộc tính `private`, Getter/Setter đầy đủ |
+| 🧪 **JUnit 5 (TDD)** | 12 test cases — Viết test trước, code xử lý sau |
+| 🔒 **Thread Safety** | `synchronized` methods + try-with-resources |
+| 🔗 **Dependency Injection** | Interface `AccountServiceInterface` → `AccountServiceImpl` → DI qua constructor |
+| ✅ **Data Validation** | Kiểm tra số dư, PIN 6 số, số tiền hợp lệ |
 
 ---
 
@@ -30,31 +32,31 @@ Dự án **Advanced ATM Simulator** là ứng dụng Java Core thuần chạy tr
 ```
 src/
 └── com/atm/
-    ├── Main.java                          # 🚀 Điểm khởi chạy
-    ├── app/                               # (dự phòng)
+    ├── Main.java                              # 🚀 Điểm khởi chạy + Login + Register
     ├── controller/
-    │   └── ATMController.java             # Điều phối View → Service
+    │   └── ATMController.java                 # Điều phối View → Service (DI)
     ├── entity/
-    │   ├── User.java                      # Abstract class (Serializable)
-    │   ├── Admin.java                     # Kế thừa User
-    │   ├── Account.java                   # Kế thừa User
-    │   ├── Transaction.java               # Lịch sử giao dịch
-    │   └── UserFactory.java               # Factory Pattern
+    │   ├── User.java                          # Abstract class (Serializable)
+    │   ├── Admin.java                         # Kế thừa User
+    │   ├── Account.java                       # Kế thừa User
+    │   ├── Transaction.java                   # Lịch sử giao dịch
+    │   └── UserFactory.java                   # Factory Pattern
     ├── exception/
-    │   ├── InsufficientBalanceException   # Số dư không đủ
-    │   ├── AccountLockedException         # Tài khoản bị khóa
-    │   └── InvalidPinException            # Sai mã PIN
+    │   ├── InsufficientBalanceException.java  # Số dư không đủ
+    │   ├── AccountLockedException.java        # Tài khoản bị khóa
+    │   └── InvalidPinException.java           # Sai mã PIN
     ├── repository/
-    │   ├── BaseRepository.java            # Generic interface
-    │   ├── BaseRepositoryImpl.java        # File IO (ObjectStream)
-    │   ├── AccountRepository.java         # data/accounts.dat
-    │   └── TransactionRepository.java     # data/transactions.dat
+    │   ├── BaseRepository.java                # Generic Interface `<T>`
+    │   ├── BaseRepositoryImpl.java            # File IO (try-with-resources)
+    │   ├── AccountRepository.java             # data/accounts.dat
+    │   └── TransactionRepository.java         # data/transactions.dat
     ├── service/
-    │   ├── AccountService.java            # Business Logic
-    │   └── AccountServiceTest.java        # JUnit 5 Tests
-    ├── util/                              # (dự phòng)
-    └── view/
-        └── ATMView.java                   # CLI Menu
+    │   ├── AccountServiceInterface.java       # Interface cho Service Layer
+    │   ├── AccountServiceImpl.java            # Business Logic (synchronized)
+    │   └── AccountServiceTest.java            # 12 JUnit 5 Test Cases
+    ├── view/
+    │   └── ATMView.java                       # CLI Menu (try-catch đa tầng)
+    └── util/                                  # (dự phòng)
 ```
 
 ---
@@ -89,6 +91,30 @@ src/
 
 ---
 
+## 🔗 Dependency Injection (DI)
+
+```
+Main.java
+ ├── AccountRepository (trực tiếp cho Login/Register)
+ ├── AccountServiceImpl
+ │    └── AccountRepository (tự khởi tạo)
+ ├── ATMController(AccountServiceInterface ← AccountServiceImpl)  ← DI
+ └── ATMView(ATMController)
+```
+
+---
+
+## ✅ Validation & Thread Safety
+
+| Phương thức | Validation | Thread Safety |
+|:-----------|:-----------|:-------------:|
+| `withdraw()` | Tài khoản khóa? Số dư đủ? | `synchronized` |
+| `deposit()` | Số tiền > 0? | `synchronized` |
+| `transfer()` | Nguồn khóa? Đủ tiền? Đích tồn tại? Đích khóa? | `synchronized` |
+| `changePin()` | PIN cũ đúng? PIN mới 6 số? | `synchronized` |
+
+---
+
 ## 🧪 Tài khoản mẫu
 
 | Số tài khoản | Mã PIN | Số dư | Username |
@@ -101,6 +127,26 @@ src/
 
 ---
 
+## 🧪 Bộ kiểm thử JUnit 5 (12 Test Cases)
+
+| Chức năng | Test case | Kỳ vọng |
+|:----------|:----------|:--------|
+| **Rút tiền** | `testWithdraw_Success` | 500k → rút 200k = 300k ✅ |
+| | `testWithdraw_InsufficientBalance_ShouldThrowException` | Rút > số dư → `InsufficientBalanceException` ✅ |
+| | `testWithdraw_AccountLocked_ShouldThrowException` | TK khóa → `AccountLockedException` ✅ |
+| **Nạp tiền** | `testDeposit_Success` | 500k → nạp 100k = 600k ✅ |
+| | `testDeposit_NegativeAmount_ShouldThrowException` | Số âm → `IllegalArgumentException` ✅ |
+| | `testDeposit_ZeroAmount_ShouldThrowException` | Số 0 → `IllegalArgumentException` ✅ |
+| **Chuyển tiền** | `testTransfer_Success` | Chuyển 200k, nguồn còn 300k ✅ |
+| | `testTransfer_InsufficientBalance_ShouldThrowException` | Chuyển > số dư → `InsufficientBalanceException` ✅ |
+| | `testTransfer_AccountNotFound_ShouldThrowException` | TK đích ko tồn tại → `IllegalArgumentException` ✅ |
+| **Đổi PIN** | `testChangePin_Success` | PIN cũ → PIN mới ✅ |
+| | `testChangePin_WrongOldPin_ShouldThrowException` | Sai PIN cũ → `InvalidPinException` ✅ |
+| | `testChangePin_NewPinNotSixDigits_ShouldThrowException` | PIN mới 5 số → `InvalidPinException` ✅ |
+| | `testChangePin_NewPinContainsLetters_ShouldThrowException` | PIN mới "abc123" → `InvalidPinException` ✅ |
+
+---
+
 ## 📅 Tiến độ dự án
 
 | Tuần | Nội dung | Trạng thái |
@@ -110,7 +156,29 @@ src/
 | 3 | Tầng dữ liệu (Generic Repository & File IO) | ✅ Hoàn thành |
 | 4 | Logic nghiệp vụ Service (withdraw, deposit, transfer, changePin) | ✅ Hoàn thành |
 | 5 | Controller, CLI View, Login/Register & Nghiệm thu | ✅ Hoàn thành |
+| 6 | **Refactor:** Interface Service, DI, Thread Safety, Validation, 12 Tests | ✅ Hoàn thành |
 
 ---
 
+## 🚀 Hướng dẫn chạy
 
+```bash
+# 1. Biên dịch toàn bộ source code
+javac -d bin -cp lib/junit-platform-console-standalone.jar src/com/atm/**/*.java src/com/atm/Main.java
+
+# 2. Chạy chương trình
+java -cp bin com.atm.Main
+```
+
+> **Yêu cầu:** Java 8+ và thư viện `junit-platform-console-standalone.jar` trong thư mục `lib/`.
+
+---
+
+## 👤 Tác giả
+
+**Dự án cá nhân — CodeGym**  
+Mô phỏng máy ATM bằng Java Core thuần — Kiến trúc 3-Tier — Thread Safety — TDD
+
+---
+
+<p align="center"><i>⭐ Nếu bạn thấy dự án hữu ích, hãy để lại một ngôi sao nhé!</i></p>

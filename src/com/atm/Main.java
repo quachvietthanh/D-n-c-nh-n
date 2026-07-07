@@ -3,6 +3,7 @@ package com.atm;
 import com.atm.controller.ATMController;
 import com.atm.entity.Account;
 import com.atm.repository.AccountRepository;
+import com.atm.service.AccountServiceImpl;
 import com.atm.view.ATMView;
 import java.util.List;
 import java.util.Scanner;
@@ -11,7 +12,8 @@ public class Main {
 
     public static void main(String[] args) {
         AccountRepository accountRepository = new AccountRepository();
-        ATMController atmController = new ATMController();
+        AccountServiceImpl accountService = new AccountServiceImpl();
+        ATMController atmController = new ATMController(accountService);
         ATMView atmView = new ATMView(atmController);
 
         List<Account> accounts = accountRepository.findAll();
