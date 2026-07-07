@@ -15,6 +15,7 @@ public class ATMView {
         this.atmController = atmController;
     }
 
+    @SuppressWarnings("resource")
     public void displayMainMenu(Account currentAccount) {
         Scanner scanner = new Scanner(System.in);
         while (true) {

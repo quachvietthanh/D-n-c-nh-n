@@ -157,9 +157,9 @@ Main.java
 | 4 | Logic nghiệp vụ Service (withdraw, deposit, transfer, changePin) | ✅ Hoàn thành |
 | 5 | Controller, CLI View, Login/Register & Nghiệm thu | ✅ Hoàn thành |
 | 6 | **Refactor:** Interface Service, DI, Thread Safety, Validation, 12 Tests | ✅ Hoàn thành |
+| 7 | **Fix:** Resource leak warning → `@SuppressWarnings("resource")` | ✅ Hoàn thành |
 
 ---
-
 ## 🚀 Hướng dẫn chạy
 
 ```bash
