@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static final String DEFAULT_ROLE = "USER";
+
     public static void main(String[] args) {
         AccountRepository accountRepository = new AccountRepository();
         AccountServiceImpl accountService = new AccountServiceImpl();
@@ -18,11 +20,11 @@ public class Main {
 
         List<Account> accounts = accountRepository.findAll();
         if (accounts.isEmpty()) {
-            accountRepository.add(new Account(1, "user1", "pass1", "USER",
+            accountRepository.add(new Account(1, "user1", "pass1", DEFAULT_ROLE,
                     "1234567890", 5000000, "123456", false));
-            accountRepository.add(new Account(2, "user2", "pass2", "USER",
+            accountRepository.add(new Account(2, "user2", "pass2", DEFAULT_ROLE,
                     "0987654321", 3000000, "654321", false));
-            accountRepository.add(new Account(3, "admin", "admin", "USER",
+            accountRepository.add(new Account(3, "admin", "admin", DEFAULT_ROLE,
                     "1111111111", 10000000, "111111", false));
             System.out.println("Da tao san du lieu tai khoan mau.");
         }
@@ -117,7 +119,7 @@ public class Main {
         }
         int newId = maxId + 1;
 
-        Account newAccount = new Account(newId, username, password, "USER",
+        Account newAccount = new Account(newId, username, password, DEFAULT_ROLE,
                 accountNumber, balance, pin, false);
         accountRepository.add(newAccount);
         System.out.println("Dang ky tai khoan thanh cong! Bay gio ban co the dang nhap.");

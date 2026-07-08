@@ -9,6 +9,10 @@ import java.util.List;
 
 public class AccountServiceImpl implements AccountServiceInterface {
 
+    public static final double MIN_DEPOSIT_AMOUNT = 0;
+    public static final int PIN_LENGTH = 6;
+    public static final String PIN_PATTERN = "\\d{" + PIN_LENGTH + "}";
+
     private final AccountRepository accountRepository;
 
     public AccountServiceImpl() {
@@ -30,8 +34,8 @@ public class AccountServiceImpl implements AccountServiceInterface {
 
     @Override
     public synchronized void deposit(Account account, double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("So tien nap phai lon hon 0");
+        if (amount <= MIN_DEPOSIT_AMOUNT) {
+            throw new IllegalArgumentException("So tien nap phai lon hon " + (int) MIN_DEPOSIT_AMOUNT);
         }
         account.setBalance(account.getBalance() + amount);
         updateAccountInFile(account);
@@ -78,8 +82,8 @@ public class AccountServiceImpl implements AccountServiceInterface {
         if (!account.getPinCode().equals(oldPin)) {
             throw new InvalidPinException("Ma PIN cu khong dung");
         }
-        if (newPin == null || !newPin.matches("\\d{6}")) {
-            throw new InvalidPinException("Ma PIN moi phai gom 6 chu so");
+        if (newPin == null || !newPin.matches(PIN_PATTERN)) {
+            throw new InvalidPinException("Ma PIN moi phai gom " + PIN_LENGTH + " chu so");
         }
         account.setPinCode(newPin);
         updateAccountInFile(account);
