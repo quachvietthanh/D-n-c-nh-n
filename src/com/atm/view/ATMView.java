@@ -39,62 +39,96 @@ public class ATMView {
                     break;
 
                 case 2:
-                    System.out.print("Nhap so tien can rut: ");
-                    String withdrawInput = scanner.nextLine().replace(",", "");
-                    try {
-                        double withdrawAmount = Double.parseDouble(withdrawInput);
-                        atmController.handleWithdraw(currentAccount, withdrawAmount);
-                        System.out.println("Rut tien thanh cong!");
-                    } catch (NumberFormatException e) {
-                        System.out.println("So tien nhap khong hop le, vui long nhap lai!");
-                    } catch (AccountLockedException e) {
-                        System.out.println("Loi: " + e.getMessage());
-                    } catch (InsufficientBalanceException e) {
-                        System.out.println("Loi: " + e.getMessage());
-                    } catch (Exception e) {
-                        System.out.println("Loi: " + e.getMessage());
+                    while (true) {
+                        System.out.print("Nhap so tien can rut: ");
+                        String withdrawInput = scanner.nextLine().replace(",", "");
+                        try {
+                            double withdrawAmount = Double.parseDouble(withdrawInput);
+                            atmController.handleWithdraw(currentAccount, withdrawAmount);
+                            System.out.println("Rut tien thanh cong!");
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("So tien nhap khong hop le! Vui long nhap lai:");
+                        } catch (AccountLockedException e) {
+                            System.out.println("Loi: " + e.getMessage());
+                            break;
+                        } catch (InsufficientBalanceException e) {
+                            System.out.println("Loi: " + e.getMessage());
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Loi: " + e.getMessage());
+                            break;
+                        }
                     }
                     break;
 
                 case 3:
-                    System.out.print("Nhap so tien can nap: ");
-                    String depositInput = scanner.nextLine().replace(",", "");
-                    try {
-                        double depositAmount = Double.parseDouble(depositInput);
-                        atmController.handleDeposit(currentAccount, depositAmount);
-                        System.out.println("Nap tien thanh cong!");
-                    } catch (NumberFormatException e) {
-                        System.out.println("So tien nhap khong hop le, vui long nhap lai!");
-                    } catch (Exception e) {
-                        System.out.println("Loi: " + e.getMessage());
+                    while (true) {
+                        System.out.print("Nhap so tien can nap: ");
+                        String depositInput = scanner.nextLine().replace(",", "");
+                        try {
+                            double depositAmount = Double.parseDouble(depositInput);
+                            atmController.handleDeposit(currentAccount, depositAmount);
+                            System.out.println("Nap tien thanh cong!");
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("So tien nhap khong hop le! Vui long nhap lai:");
+                        } catch (Exception e) {
+                            System.out.println("Loi: " + e.getMessage());
+                            break;
+                        }
                     }
                     break;
 
                 case 4:
                     System.out.print("Nhap so tai khoan dich: ");
                     String targetAccountNumber = scanner.nextLine();
-                    System.out.print("Nhap so tien can chuyen: ");
-                    String transferInput = scanner.nextLine().replace(",", "");
-                    try {
-                        double transferAmount = Double.parseDouble(transferInput);
-                        atmController.handleTransfer(currentAccount, targetAccountNumber, transferAmount);
-                        System.out.println("Chuyen tien thanh cong!");
-                    } catch (NumberFormatException e) {
-                        System.out.println("So tien nhap khong hop le, vui long nhap lai!");
-                    } catch (AccountLockedException e) {
-                        System.out.println("Loi: " + e.getMessage());
-                    } catch (InsufficientBalanceException e) {
-                        System.out.println("Loi: " + e.getMessage());
-                    } catch (Exception e) {
-                        System.out.println("Loi: " + e.getMessage());
+                    while (true) {
+                        System.out.print("Nhap so tien can chuyen: ");
+                        String transferInput = scanner.nextLine().replace(",", "");
+                        try {
+                            double transferAmount = Double.parseDouble(transferInput);
+                            atmController.handleTransfer(currentAccount, targetAccountNumber, transferAmount);
+                            System.out.println("Chuyen tien thanh cong!");
+                            break;
+                        } catch (NumberFormatException e) {
+                            System.out.println("So tien nhap khong hop le! Vui long nhap lai:");
+                        } catch (AccountLockedException e) {
+                            System.out.println("Loi: " + e.getMessage());
+                            break;
+                        } catch (InsufficientBalanceException e) {
+                            System.out.println("Loi: " + e.getMessage());
+                            break;
+                        } catch (Exception e) {
+                            System.out.println("Loi: " + e.getMessage());
+                            break;
+                        }
                     }
                     break;
 
                 case 5:
-                    System.out.print("Nhap ma PIN cu: ");
-                    String oldPin = scanner.nextLine();
-                    System.out.print("Nhap ma PIN moi: ");
-                    String newPin = scanner.nextLine();
+                    String oldPin;
+                    while (true) {
+                        System.out.print("Nhap ma PIN cu: ");
+                        oldPin = scanner.nextLine();
+                        if (oldPin != null && oldPin.matches("\\d{6}")) {
+                            break;
+                        }
+                        System.out.println("Ma PIN khong hop le! Phai bao gom dung 6 chu so. Vui long nhap lai:");
+                    }
+                    String newPin;
+                    while (true) {
+                        System.out.print("Nhap ma PIN moi (6 so): ");
+                        newPin = scanner.nextLine();
+                        if (newPin != null && newPin.matches("\\d{6}") && !newPin.equals(oldPin)) {
+                            break;
+                        }
+                        if (newPin != null && newPin.equals(oldPin)) {
+                            System.out.println("Ma PIN moi khong duoc trung voi ma PIN cu! Vui long nhap lai:");
+                        } else {
+                            System.out.println("Ma PIN khong hop le! Phai bao gom dung 6 chu so. Vui long nhap lai:");
+                        }
+                    }
                     try {
                         atmController.handleChangePin(currentAccount, oldPin, newPin);
                         System.out.println("Doi ma PIN thanh cong!");

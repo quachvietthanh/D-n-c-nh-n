@@ -185,4 +185,6 @@ java -cp bin com.atm.Main
 
 - **Chống sập ứng dụng (Crash-safe Input):** Đọc dữ liệu số tiền bằng chuỗi ('nextLine()') và làm sạch ký tự trước khi ép kiểu. Bọc toàn bộ bằng 'try-catch (NumberFormatException)' để xử lý lỗi nhập liệu (như nhập dấu phẩy, chữ cái) êm đẹp thay vì làm sập ứng dụng ngầm.
 
+- **Vòng lặp nhập liệu thông minh (Input Loop UX):** Giữ chân người dùng tại trường nhập liệu khi họ gõ sai định dạng thay vì đẩy ra ngoài Menu, đồng thời cung cấp tùy chọn 'Quay lại' nếu bấm nhầm.
+
 ---
