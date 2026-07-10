@@ -17,4 +17,6 @@ public interface AccountServiceInterface {
 
     void changePin(Account account, String oldPin, String newPin)
             throws InvalidPinException;
+
+    void registerAccount(Account newAccount);
 }

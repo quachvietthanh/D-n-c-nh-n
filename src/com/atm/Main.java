@@ -47,7 +47,7 @@ public class Main {
                     handleLogin(accountRepository, atmController, atmView, scanner);
                     break;
                 case 2:
-                    handleRegister(accountRepository, scanner);
+                    handleRegister(accountService, scanner);
                     break;
                 case 3:
                     System.out.println("Tam biet!");
@@ -67,10 +67,10 @@ public class Main {
             System.out.println("========= DANG NHAP HE THONG ATM =========");
             System.out.print("Nhap so tai khoan: ");
             String accountNumber = scanner.nextLine();
-            System.out.print("Nhap ma PIN: ");
-            String pin = scanner.nextLine();
+            System.out.print("Nhap mat khau: ");
+            String password = scanner.nextLine();
 
-            boolean loginSuccess = atmController.login(accountNumber, pin);
+            boolean loginSuccess = atmController.login(accountNumber, password);
             if (loginSuccess) {
                 List<Account> allAccounts = accountRepository.findAll();
                 Account currentAccount = null;
@@ -84,12 +84,12 @@ public class Main {
                 atmView.displayMainMenu(currentAccount);
                 break;
             } else {
-                System.out.println("Sai so tai khoan hoac ma PIN. Vui long nhap lai!");
+                System.out.println("Sai so tai khoan hoac mat khau. Vui long nhap lai!");
             }
         }
     }
 
-    private static void handleRegister(AccountRepository accountRepository, Scanner scanner) {
+    private static void handleRegister(AccountServiceImpl accountService, Scanner scanner) {
         System.out.println("========= DANG KY TAI KHOAN MOI =========");
         System.out.print("Nhap so tai khoan: ");
         String accountNumber = scanner.nextLine();
@@ -103,25 +103,18 @@ public class Main {
         System.out.print("Nhap ma PIN (6 so): ");
         String pin = scanner.nextLine();
 
-        List<Account> existingAccounts = accountRepository.findAll();
-        for (Account acc : existingAccounts) {
-            if (acc.getAccountNumber().equals(accountNumber)) {
-                System.out.println("So tai khoan da ton tai. Vui long thu lai!");
-                return;
-            }
+        if (pin == null || !pin.matches("\\d{6}")) {
+            System.out.println("Ma PIN phai gom dung 6 chu so. Vui long dang ky lai!");
+            return;
         }
 
-        int maxId = 0;
-        for (Account acc : existingAccounts) {
-            if (acc.getId() > maxId) {
-                maxId = acc.getId();
-            }
+        try {
+            Account newAccount = new Account(0, username, password, DEFAULT_ROLE,
+                    accountNumber, balance, pin, false);
+            accountService.registerAccount(newAccount);
+            System.out.println("Dang ky tai khoan thanh cong! Bay gio ban co the dang nhap.");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Loi: " + e.getMessage());
         }
-        int newId = maxId + 1;
-
-        Account newAccount = new Account(newId, username, password, DEFAULT_ROLE,
-                accountNumber, balance, pin, false);
-        accountRepository.add(newAccount);
-        System.out.println("Dang ky tai khoan thanh cong! Bay gio ban co the dang nhap.");
     }
 }

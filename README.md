@@ -117,11 +117,11 @@ Main.java
 
 ## 🧪 Tài khoản mẫu
 
-| Số tài khoản | Mã PIN | Số dư | Username |
-|:------------:|:------:|:-----:|:--------:|
-| `1234567890` | `123456` | 5,000,000₫ | user1 |
-| `0987654321` | `654321` | 3,000,000₫ | user2 |
-| `1111111111` | `111111` | 10,000,000₫ | admin |
+| Số tài khoản | Mật khẩu | Mã PIN | Số dư | Username |
+|:------------:|:--------:|:------:|:-----:|:--------:|
+| `1234567890` | `pass1` | `123456` | 5,000,000₫ | user1 |
+| `0987654321` | `pass2` | `654321` | 3,000,000₫ | user2 |
+| `1111111111` | `admin` | `111111` | 10,000,000₫ | admin |
 
 > Tài khoản mẫu được tự động tạo khi chạy lần đầu nếu chưa có dữ liệu.
 
@@ -157,8 +157,10 @@ Main.java
 | 4 | Logic nghiệp vụ Service (withdraw, deposit, transfer, changePin) | ✅ Hoàn thành |
 | 5 | Controller, CLI View, Login/Register & Nghiệm thu | ✅ Hoàn thành |
 | 6 | **Refactor:** Interface Service, DI, Thread Safety, Validation, 12 Tests | ✅ Hoàn thành |
+| 7 | **Fix:** Crash-safe Input, chống trùng tài khoản, bảo mật 2 lớp, chặn tự chuyển | ✅ Hoàn thành |
 
 ---
+
 ## 🚀 Hướng dẫn chạy
 
 ```bash
@@ -171,4 +173,16 @@ java -cp bin com.atm.Main
 
 ---
 
+## 🔒 6. Các ràng buộc nghiệp vụ nâng cao (Business Rules & Edge Cases)
 
+Để hệ thống đạt độ tin cậy cao tương đương một cây ATM thực tế, ứng dụng đã cài đặt chặt chẽ các cơ chế xử lý lỗi biên dịch và logic ngầm:
+
+- **Chống trùng tài khoản (Unique ID):** Hệ thống tự động quét kho lưu trữ dữ liệu tệp tin trước khi tạo mới. Nếu Số tài khoản đã tồn tại, ứng dụng sẽ chặn lại và báo lỗi ngay lập tức.
+
+- **Xác thực bảo mật hai lớp (Password & PIN):** Tách biệt luồng Đăng nhập (sử dụng Số tài khoản + Mật khẩu) và luồng Giao dịch tài chính bên trong (bắt buộc xác thực bằng Mã PIN 6 số).
+
+- **Chặn giao dịch vô lý (Guard Clauses):** Hệ thống chặn hoàn toàn tính năng tự chuyển tiền cho chính mình để tránh lỗi bất nhất số dư, đồng thời đồng nhất quy tắc bắt buộc Mã PIN phải đúng 6 ký tự số ở mọi chức năng.
+
+- **Chống sập ứng dụng (Crash-safe Input):** Đọc dữ liệu số tiền bằng chuỗi ('nextLine()') và làm sạch ký tự trước khi ép kiểu. Bọc toàn bộ bằng 'try-catch (NumberFormatException)' để xử lý lỗi nhập liệu (như nhập dấu phẩy, chữ cái) êm đẹp thay vì làm sập ứng dụng ngầm.
+
+---

@@ -40,11 +40,13 @@ public class ATMView {
 
                 case 2:
                     System.out.print("Nhap so tien can rut: ");
-                    double withdrawAmount = scanner.nextDouble();
-                    scanner.nextLine();
+                    String withdrawInput = scanner.nextLine().replace(",", "");
                     try {
+                        double withdrawAmount = Double.parseDouble(withdrawInput);
                         atmController.handleWithdraw(currentAccount, withdrawAmount);
                         System.out.println("Rut tien thanh cong!");
+                    } catch (NumberFormatException e) {
+                        System.out.println("So tien nhap khong hop le, vui long nhap lai!");
                     } catch (AccountLockedException e) {
                         System.out.println("Loi: " + e.getMessage());
                     } catch (InsufficientBalanceException e) {
@@ -56,11 +58,13 @@ public class ATMView {
 
                 case 3:
                     System.out.print("Nhap so tien can nap: ");
-                    double depositAmount = scanner.nextDouble();
-                    scanner.nextLine();
+                    String depositInput = scanner.nextLine().replace(",", "");
                     try {
+                        double depositAmount = Double.parseDouble(depositInput);
                         atmController.handleDeposit(currentAccount, depositAmount);
                         System.out.println("Nap tien thanh cong!");
+                    } catch (NumberFormatException e) {
+                        System.out.println("So tien nhap khong hop le, vui long nhap lai!");
                     } catch (Exception e) {
                         System.out.println("Loi: " + e.getMessage());
                     }
@@ -70,11 +74,13 @@ public class ATMView {
                     System.out.print("Nhap so tai khoan dich: ");
                     String targetAccountNumber = scanner.nextLine();
                     System.out.print("Nhap so tien can chuyen: ");
-                    double transferAmount = scanner.nextDouble();
-                    scanner.nextLine();
+                    String transferInput = scanner.nextLine().replace(",", "");
                     try {
+                        double transferAmount = Double.parseDouble(transferInput);
                         atmController.handleTransfer(currentAccount, targetAccountNumber, transferAmount);
                         System.out.println("Chuyen tien thanh cong!");
+                    } catch (NumberFormatException e) {
+                        System.out.println("So tien nhap khong hop le, vui long nhap lai!");
                     } catch (AccountLockedException e) {
                         System.out.println("Loi: " + e.getMessage());
                     } catch (InsufficientBalanceException e) {

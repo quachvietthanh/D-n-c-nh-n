@@ -44,6 +44,9 @@ public class AccountServiceImpl implements AccountServiceInterface {
     @Override
     public synchronized void transfer(Account sourceAccount, String targetAccountNumber, double amount)
             throws AccountLockedException, InsufficientBalanceException {
+        if (sourceAccount.getAccountNumber().equals(targetAccountNumber)) {
+            throw new IllegalArgumentException("Khong the thuc hien giao dich cho chinh ban than!");
+        }
         if (sourceAccount.isLocked()) {
             throw new AccountLockedException("Tai khoan nguon da bi khoa");
         }
@@ -87,6 +90,17 @@ public class AccountServiceImpl implements AccountServiceInterface {
         }
         account.setPinCode(newPin);
         updateAccountInFile(account);
+    }
+
+    @Override
+    public synchronized void registerAccount(Account newAccount) {
+        List<Account> accounts = accountRepository.findAll();
+        for (Account acc : accounts) {
+            if (acc.getAccountNumber().equals(newAccount.getAccountNumber())) {
+                throw new IllegalArgumentException("So tai khoan da ton tai tren he thong!");
+            }
+        }
+        accountRepository.add(newAccount);
     }
 
     private void updateAccountInFile(Account account) {

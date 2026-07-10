@@ -2,6 +2,8 @@ package com.atm.entity;
 
 import java.io.Serializable;
 
+// abstract: không thể new User() trực tiếp, chỉ để kế thừa
+// Serializable: cho phép Object Stream đọc/ghi file nhị phân
 public abstract class User implements Serializable {
 
     private int id;
@@ -19,6 +21,7 @@ public abstract class User implements Serializable {
         this.role = role;
     }
 
+    // Getter/Setter: đóng gói dữ liệu, truy cập qua phương thức
     public int getId() {
         return id;
     }

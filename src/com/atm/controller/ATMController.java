@@ -16,11 +16,12 @@ public class ATMController {
         this.accountService = accountService;
     }
 
-    public boolean login(String accountNumber, String pin) {
+    public boolean login(String accountNumber, String password) {
         AccountRepository accountRepository = new AccountRepository();
         List<Account> accounts = accountRepository.findAll();
         for (Account acc : accounts) {
-            if (acc.getAccountNumber().equals(accountNumber) && acc.getPinCode().equals(pin)) {
+            if (acc.getAccountNumber().equals(accountNumber)
+                    && acc.getPassword().equals(password)) {
                 return true;
             }
         }
