@@ -65,10 +65,17 @@ public class Main {
                                      Scanner scanner) {
         while (true) {
             System.out.println("========= DANG NHAP HE THONG ATM =========");
+            System.out.println("Nhap 'EXIT' de quay lai.");
             System.out.print("Nhap so tai khoan: ");
             String accountNumber = scanner.nextLine();
+            if (accountNumber.equalsIgnoreCase("EXIT")) {
+                return;
+            }
             System.out.print("Nhap mat khau: ");
             String password = scanner.nextLine();
+            if (password.equalsIgnoreCase("EXIT")) {
+                return;
+            }
 
             boolean loginSuccess = atmController.login(accountNumber, password);
             if (loginSuccess) {
@@ -90,31 +97,73 @@ public class Main {
     }
 
     private static void handleRegister(AccountServiceImpl accountService, Scanner scanner) {
-        System.out.println("========= DANG KY TAI KHOAN MOI =========");
-        System.out.print("Nhap so tai khoan: ");
-        String accountNumber = scanner.nextLine();
-        System.out.print("Nhap ten dang nhap: ");
-        String username = scanner.nextLine();
-        System.out.print("Nhap mat khau: ");
-        String password = scanner.nextLine();
-        System.out.print("Nhap so du khoi tao: ");
-        double balance = scanner.nextDouble();
-        scanner.nextLine();
-        System.out.print("Nhap ma PIN (6 so): ");
-        String pin = scanner.nextLine();
+        while (true) {
+            System.out.println("========= DANG KY TAI KHOAN MOI =========");
+            System.out.println("Nhap 'EXIT' de quay lai.");
+            System.out.print("Nhap so tai khoan: ");
+            String accountNumber = scanner.nextLine();
+            if (accountNumber.equalsIgnoreCase("EXIT")) {
+                return;
+            }
 
-        if (pin == null || !pin.matches("\\d{6}")) {
-            System.out.println("Ma PIN phai gom dung 6 chu so. Vui long dang ky lai!");
-            return;
-        }
+            System.out.print("Nhap ten dang nhap: ");
+            String username = scanner.nextLine();
+            if (username.equalsIgnoreCase("EXIT")) {
+                return;
+            }
 
-        try {
-            Account newAccount = new Account(0, username, password, DEFAULT_ROLE,
-                    accountNumber, balance, pin, false);
-            accountService.registerAccount(newAccount);
-            System.out.println("Dang ky tai khoan thanh cong! Bay gio ban co the dang nhap.");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Loi: " + e.getMessage());
+            String password;
+            while (true) {
+                System.out.print("Nhap mat khau: ");
+                password = scanner.nextLine();
+                if (password.equalsIgnoreCase("EXIT")) {
+                    return;
+                }
+                if (password != null && !password.trim().isEmpty()) {
+                    break;
+                }
+                System.out.println("Mat khau khong duoc de trong! Vui long nhap lai:");
+            }
+
+            double balance = 0;
+            while (true) {
+                System.out.print("Nhap so du khoi tao: ");
+                String balanceInput = scanner.nextLine();
+                if (balanceInput.equalsIgnoreCase("EXIT")) {
+                    return;
+                }
+                balanceInput = balanceInput.replace(",", "");
+                try {
+                    balance = Double.parseDouble(balanceInput);
+                    if (balance >= 0) break;
+                    System.out.println("So du khong duoc am! Vui long nhap lai:");
+                } catch (NumberFormatException e) {
+                    System.out.println("So tien khong hop le! Vui long nhap lai:");
+                }
+            }
+
+            String pin;
+            while (true) {
+                System.out.print("Nhap ma PIN (6 so): ");
+                pin = scanner.nextLine();
+                if (pin.equalsIgnoreCase("EXIT")) {
+                    return;
+                }
+                if (pin != null && pin.matches("\\d{6}")) {
+                    break;
+                }
+                System.out.println("Ma PIN khong hop le! Phai bao gom dung 6 chu so. Vui long nhap lai:");
+            }
+
+            try {
+                Account newAccount = new Account(0, username, password, DEFAULT_ROLE,
+                        accountNumber, balance, pin, false);
+                accountService.registerAccount(newAccount);
+                System.out.println("Dang ky tai khoan thanh cong! Bay gio ban co the dang nhap.");
+                return;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Loi: " + e.getMessage() + " Vui long nhap lai tu dau!");
+            }
         }
     }
 }

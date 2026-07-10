@@ -175,6 +175,8 @@ java -cp bin com.atm.Main
 
 ## 🔒 6. Các ràng buộc nghiệp vụ nâng cao (Business Rules & Edge Cases)
 
+- **Vòng lặp nhập liệu thông minh (Input Loop UX):** Giữ chân người dùng tại trường nhập liệu khi họ gõ sai định dạng (PIN, mật khẩu, số tiền) thay vì đẩy ra ngoài Menu. Sử dụng phím 'EXIT' (không phân biệt hoa thường) để hủy bỏ và quay lại Menu chính ở bất kỳ bước nhập nào, tránh xung đột với dữ liệu hợp lệ. Khi đăng ký trùng số tài khoản, hệ thống tự động quay vòng lặp để người dùng nhập lại từ đầu.
+
 Để hệ thống đạt độ tin cậy cao tương đương một cây ATM thực tế, ứng dụng đã cài đặt chặt chẽ các cơ chế xử lý lỗi biên dịch và logic ngầm:
 
 - **Chống trùng tài khoản (Unique ID):** Hệ thống tự động quét kho lưu trữ dữ liệu tệp tin trước khi tạo mới. Nếu Số tài khoản đã tồn tại, ứng dụng sẽ chặn lại và báo lỗi ngay lập tức.
@@ -185,6 +187,5 @@ java -cp bin com.atm.Main
 
 - **Chống sập ứng dụng (Crash-safe Input):** Đọc dữ liệu số tiền bằng chuỗi ('nextLine()') và làm sạch ký tự trước khi ép kiểu. Bọc toàn bộ bằng 'try-catch (NumberFormatException)' để xử lý lỗi nhập liệu (như nhập dấu phẩy, chữ cái) êm đẹp thay vì làm sập ứng dụng ngầm.
 
-- **Vòng lặp nhập liệu thông minh (Input Loop UX):** Giữ chân người dùng tại trường nhập liệu khi họ gõ sai định dạng thay vì đẩy ra ngoài Menu, đồng thời cung cấp tùy chọn 'Quay lại' nếu bấm nhầm.
 
 ---
